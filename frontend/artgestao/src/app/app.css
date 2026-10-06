@@ -1,0 +1,320 @@
+* {
+  box-sizing: border-box;
+  }
+
+body {
+margin: 0;
+font-family: Arial, Helvetica, sans-serif;
+background: #f8f8f8;
+color: #292524;
+}
+
+.layout {
+display: flex;
+min-height: 100vh;
+}
+
+/* =========================
+SIDEBAR
+========================= */
+
+.sidebar {
+width: 245px;
+min-height: 100vh;
+
+background: #ffffff;
+
+position: fixed;
+left: 0;
+top: 0;
+
+border-right: 1px solid #eeeeee;
+
+box-shadow: 3px 0 15px rgba(0, 0, 0, 0.04);
+
+z-index: 10;
+}
+
+.logo {
+height: 75px;
+
+display: flex;
+align-items: center;
+
+padding: 0 25px;
+
+border-bottom: 1px solid #eeeeee;
+}
+
+.logo h1 {
+margin: 0;
+
+font-size: 22px;
+font-weight: 800;
+
+letter-spacing: 0.8px;
+
+color: #f97316;
+}
+
+/* detalhe colorido da marca */
+
+.logo h1::after {
+content: " •";
+color: #38bdf8;
+}
+
+/* =========================
+MENU
+========================= */
+
+.menu {
+padding: 25px 14px;
+}
+
+.menu::before {
+content: "MENU";
+
+display: block;
+
+padding: 0 16px 12px;
+
+color: #a8a29e;
+
+font-size: 10px;
+font-weight: 700;
+
+letter-spacing: 1.2px;
+}
+
+.menu-item {
+display: flex;
+align-items: center;
+
+gap: 14px;
+
+padding: 13px 16px;
+
+margin-bottom: 7px;
+
+border-radius: 9px;
+
+text-decoration: none;
+
+color: #57534e;
+
+font-size: 14px;
+font-weight: 500;
+
+transition: all 0.2s ease;
+}
+
+.menu-item span:first-child {
+width: 22px;
+
+text-align: center;
+
+font-size: 18px;
+}
+
+.menu-item:hover {
+background: #fff7ed;
+
+color: #ea580c;
+
+transform: translateX(2px);
+}
+
+/* Tema ativo */
+
+.menu-item[href="/temas"] {
+background: #fff1e6;
+
+color: #ea580c;
+
+font-weight: 600;
+
+box-shadow: inset 3px 0 0 #f97316;
+}
+
+/* =========================
+ÁREA PRINCIPAL
+========================= */
+
+.conteudo {
+margin-left: 245px;
+
+width: calc(100% - 245px);
+
+min-height: 100vh;
+}
+
+/* =========================
+TOPO
+========================= */
+
+.topo {
+height: 75px;
+
+background: #ffffff;
+
+border-bottom: 1px solid #eeeeee;
+
+display: flex;
+
+align-items: center;
+
+justify-content: flex-end;
+
+padding: 0 35px;
+}
+
+.usuario {
+display: flex;
+
+align-items: center;
+
+gap: 10px;
+
+color: #57534e;
+
+font-size: 14px;
+
+font-weight: 500;
+}
+
+.usuario span:first-child {
+width: 38px;
+height: 38px;
+
+display: flex;
+
+align-items: center;
+justify-content: center;
+
+background: #fff1e6;
+
+border-radius: 50%;
+
+font-size: 18px;
+}
+
+/* =========================
+CONTEÚDO
+========================= */
+
+.pagina {
+padding: 35px;
+
+min-height: calc(100vh - 75px);
+
+position: relative;
+}
+
+/* =========================
+DETALHES DE FESTA
+========================= */
+
+.pagina::before {
+content: "";
+
+position: absolute;
+
+width: 90px;
+height: 90px;
+
+border-radius: 50%;
+
+background: #f97316;
+
+opacity: 0.06;
+
+top: 20px;
+right: 50px;
+
+pointer-events: none;
+}
+
+.pagina::after {
+content: "";
+
+position: absolute;
+
+width: 55px;
+height: 55px;
+
+border-radius: 50%;
+
+background: #38bdf8;
+
+opacity: 0.06;
+
+top: 75px;
+right: 115px;
+
+pointer-events: none;
+}
+
+/* =========================
+RESPONSIVO
+========================= */
+
+@media (max-width: 800px) {
+
+.sidebar {
+width: 75px;
+}
+
+.logo {
+padding: 0;
+
+
+justify-content: center;
+
+}
+
+.logo h1 {
+font-size: 0;
+}
+
+.logo h1::before {
+content: "A";
+
+font-size: 24px;
+
+color: #f97316;
+
+}
+
+.logo h1::after {
+content: "";
+}
+
+.menu-item {
+justify-content: center;
+
+
+padding: 13px;
+
+
+}
+
+.menu-item span:last-child {
+display: none;
+}
+
+.menu::before {
+display: none;
+}
+
+.conteudo {
+margin-left: 75px;
+
+width: calc(100% - 75px);
+
+}
+
+.pagina {
+padding: 20px;
+}
+}

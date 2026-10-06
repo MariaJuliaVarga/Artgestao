@@ -1,0 +1,330 @@
+<div class="pagina-temas">
+
+  <div class="cabecalho">
+
+    <div>
+
+      <h1>Gerenciar Temas</h1>
+
+      <p>
+        Quantidade de temas: {{ temas.length }}
+      </p>
+
+    </div>
+
+
+    <button
+      class="btn-novo"
+      (click)="abrirNovoTema()"
+    >
+
+      <span>+</span>
+
+      Novo Tema
+
+    </button>
+
+  </div>
+
+
+  <!-- FORMULÁRIO -->
+
+  <div
+    class="formulario-overlay"
+    *ngIf="mostrarFormulario"
+  >
+
+    <div class="formulario-tema">
+
+
+      <!-- CABEÇALHO -->
+
+      <div class="formulario-cabecalho">
+
+        <div>
+
+          <h2>
+            {{ editando
+              ? 'Editar Tema'
+              : 'Novo Tema'
+            }}
+          </h2>
+
+          <p>
+            {{ editando
+              ? 'Altere as informações do tema.'
+              : 'Cadastre um novo tema para sua loja.'
+            }}
+          </p>
+
+        </div>
+
+
+        <button
+          class="btn-fechar"
+          (click)="fecharFormulario()"
+        >
+
+          ×
+
+        </button>
+
+      </div>
+
+
+      <!-- CORPO -->
+
+      <div class="formulario-corpo">
+
+
+        <!-- NOME -->
+
+        <div class="campo">
+
+          <label>
+            Nome do tema
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="novoTema.nome"
+            placeholder="Digite o nome do tema..."
+          >
+
+        </div>
+
+
+        <!-- DESCRIÇÃO -->
+
+        <div class="campo">
+
+          <label>
+            Descrição
+          </label>
+
+          <textarea
+            [(ngModel)]="novoTema.descricao"
+            placeholder="Digite uma descrição para o tema..."
+          ></textarea>
+
+        </div>
+
+
+        <!-- IMAGENS -->
+
+        <div class="campo">
+
+          <label>
+            Imagens
+          </label>
+
+
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            (change)="selecionarImagens($event)"
+          >
+
+
+          <!-- PRÉVIAS -->
+
+          <div
+            class="preview-imagens"
+            *ngIf="previewImagens.length > 0"
+          >
+
+            <div
+              class="preview-item"
+              *ngFor="
+                let imagem of previewImagens;
+                let i = index
+              "
+            >
+
+              <img
+                [src]="imagem"
+                alt="Prévia da imagem"
+              >
+
+
+              <button
+                type="button"
+                class="btn-remover-imagem"
+                (click)="removerPreview(i)"
+              >
+
+                ×
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- BOTÕES -->
+
+      <div class="formulario-acoes">
+
+        <button
+          class="btn-cancelar"
+          (click)="fecharFormulario()"
+        >
+
+          Cancelar
+
+        </button>
+
+
+        <button
+          class="btn-salvar"
+          (click)="salvarTema()"
+        >
+
+          {{ editando
+            ? 'Salvar Alterações'
+            : 'Salvar Tema'
+          }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- PESQUISA -->
+
+  <div class="barra-pesquisa">
+
+    <input
+    type="text"
+    placeholder="Pesquisar tema..."
+    [(ngModel)]="termoPesquisa"
+    >
+  </div>
+
+
+  <!-- LISTA -->
+
+<div class="lista-temas">
+
+    <div
+    class="tema-card"
+    *ngFor="let tema of temasFiltrados()"
+    >
+
+    <!-- INFORMAÇÕES -->
+
+    <div class="tema-informacoes">
+
+      <h2>
+        {{ tema.nome }}
+      </h2>
+
+      <p>
+        {{ tema.descricao }}
+      </p>
+
+    </div>
+
+
+    <!-- IMAGENS -->
+
+    <div class="tema-imagens">
+
+      <div
+        class="tema-imagem"
+        *ngFor="let imagem of tema.imagens"
+      >
+
+        <img
+        [src]="'http://localhost:3000' + imagem"
+        [alt]="tema.nome"
+        (click)="abrirImagem(imagem)"
+        >
+
+        <button
+          class="btn-remover-imagem"
+          (click)="excluirImagem(tema, imagem)"
+        >
+          ×
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- AÇÕES -->
+
+    <div class="tema-acoes">
+
+      <button
+        class="btn-editar"
+        (click)="editarTema(tema)"
+      >
+        Editar
+      </button>
+
+      <button
+        class="btn-excluir"
+        (click)="excluirTema(tema._id!)"
+      >
+        Excluir
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- NENHUM TEMA -->
+
+    <div
+    class="sem-temas"
+    *ngIf="temasFiltrados().length === 0"
+    >
+    {{ termoPesquisa
+        ? 'Nenhum tema encontrado.'
+        : 'Nenhum tema cadastrado.'
+    }}
+    </div>
+
+    <!-- IMAGEM AMPLIADA -->
+
+<div
+  class="imagem-modal"
+  *ngIf="imagemAmpliada"
+  (click)="fecharImagem()"
+>
+
+  <div
+    class="imagem-modal-conteudo"
+    (click)="$event.stopPropagation()"
+  >
+
+    <button
+      class="imagem-modal-fechar"
+      (click)="fecharImagem()"
+    >
+      ×
+    </button>
+
+    <img
+      [src]="imagemAmpliada"
+      alt="Imagem ampliada"
+    >
+
+  </div>
+
+</div>
+
+</div>

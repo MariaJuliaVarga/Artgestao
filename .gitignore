@@ -1,0 +1,15 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente
+.env
+.env.*
+
+# Uploads
+uploads/
+
+# Angular
+dist/
+
+# Logs
+*.log
