@@ -16,6 +16,10 @@ export class Temas implements OnInit {
 
   imagemAmpliada: string | null = null;
 
+  imagensCarrossel: string[] = [];
+
+  indiceImagemAtual = 0;
+
   termoPesquisa = '';
 
   mostrarFormulario = false;
@@ -450,7 +454,13 @@ export class Temas implements OnInit {
 
 }
 
-abrirImagem(imagem: string): void {
+abrirImagem(imagem: string, imagens: string[]): void {
+
+  this.imagensCarrossel = imagens;
+
+  this.indiceImagemAtual = imagens.findIndex(
+    item => item === imagem
+  );
 
   this.imagemAmpliada =
     'http://localhost:3000' + imagem;
@@ -458,9 +468,55 @@ abrirImagem(imagem: string): void {
 }
 
 
+imagemAnterior(): void {
+
+  if (this.imagensCarrossel.length <= 1) {
+    return;
+  }
+
+  this.indiceImagemAtual--;
+
+  if (this.indiceImagemAtual < 0) {
+    this.indiceImagemAtual =
+      this.imagensCarrossel.length - 1;
+  }
+
+  this.imagemAmpliada =
+    'http://localhost:3000' +
+    this.imagensCarrossel[this.indiceImagemAtual];
+
+}
+
+
+proximaImagem(): void {
+
+  if (this.imagensCarrossel.length <= 1) {
+    return;
+  }
+
+  this.indiceImagemAtual++;
+
+  if (
+    this.indiceImagemAtual >=
+    this.imagensCarrossel.length
+  ) {
+    this.indiceImagemAtual = 0;
+  }
+
+  this.imagemAmpliada =
+    'http://localhost:3000' +
+    this.imagensCarrossel[this.indiceImagemAtual];
+
+}
+
+
 fecharImagem(): void {
 
   this.imagemAmpliada = null;
+
+  this.imagensCarrossel = [];
+
+  this.indiceImagemAtual = 0;
 
 }
 

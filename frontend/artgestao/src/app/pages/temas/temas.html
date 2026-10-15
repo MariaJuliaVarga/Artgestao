@@ -248,7 +248,7 @@
         <img
         [src]="'http://localhost:3000' + imagem"
         [alt]="tema.nome"
-        (click)="abrirImagem(imagem)"
+        (click)="abrirImagem(imagem, tema.imagens)"
         >
 
         <button
@@ -298,24 +298,33 @@
     }}
     </div>
 
-    <!-- IMAGEM AMPLIADA -->
+<!-- IMAGEM AMPLIADA / CARROSSEL -->
 
 <div
   class="imagem-modal"
   *ngIf="imagemAmpliada"
   (click)="fecharImagem()"
 >
-
   <div
     class="imagem-modal-conteudo"
     (click)="$event.stopPropagation()"
   >
 
     <button
+      type="button"
       class="imagem-modal-fechar"
       (click)="fecharImagem()"
     >
       ×
+    </button>
+
+    <button
+      type="button"
+      class="carrossel-anterior"
+      *ngIf="imagensCarrossel.length > 1"
+      (click)="imagemAnterior()"
+    >
+      ‹
     </button>
 
     <img
@@ -323,8 +332,22 @@
       alt="Imagem ampliada"
     >
 
+    <button
+      type="button"
+      class="carrossel-proxima"
+      *ngIf="imagensCarrossel.length > 1"
+      (click)="proximaImagem()"
+    >
+      ›
+    </button>
+
+    <div
+      class="contador-imagem"
+      *ngIf="imagensCarrossel.length > 1"
+    >
+      {{ indiceImagemAtual + 1 }} /
+      {{ imagensCarrossel.length }}
+    </div>
+
   </div>
-
-</div>
-
 </div>

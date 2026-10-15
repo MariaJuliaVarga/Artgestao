@@ -829,3 +829,107 @@ display: none;
 .imagem-modal-fechar:hover {
   background: #f1f1f1;
 }
+
+
+/* BOTÕES DE AÇÃO DOS TEMAS */
+
+.tema-acoes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.tema-acoes button {
+  width: 90px;
+  height: 36px;
+  padding: 0 10px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  border: none;
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.tema-acoes .btn-editar {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.tema-acoes .btn-editar:hover {
+  background: #ffedd5;
+}
+
+.tema-acoes .btn-excluir {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.tema-acoes .btn-excluir:hover {
+  background: #ffe4e6;
+}
+
+/* SETAS DO CARROSSEL */
+
+.carrossel-anterior,
+.carrossel-proxima {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: white;
+  color: #292524;
+
+  font-size: 32px;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.carrossel-anterior {
+  left: -55px;
+}
+
+.carrossel-proxima {
+  right: -55px;
+}
+
+.carrossel-anterior:hover,
+.carrossel-proxima:hover {
+  background: #ffedd5;
+}
+
+.contador-imagem {
+  position: absolute;
+  bottom: -38px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 6px 12px;
+  border-radius: 20px;
+
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+
+  font-size: 13px;
+  font-weight: 600;
+}

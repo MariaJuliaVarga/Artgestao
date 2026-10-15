@@ -10,6 +10,7 @@ uploads/
 
 # Angular
 dist/
+.angular/
 
 # Logs
 *.log

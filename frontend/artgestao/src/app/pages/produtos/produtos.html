@@ -1,0 +1,253 @@
+<div class="pagina-produtos">
+
+  <!-- CABEÇALHO -->
+
+  <div class="cabecalho">
+
+    <div>
+      <h1>Gerenciar Produtos</h1>
+      <p>Quantidade de produtos: {{ produtos.length }}</p>
+    </div>
+
+    <button class="btn-novo" (click)="abrirNovoProduto()">
+      <span>+</span>
+      Cadastrar Produto
+    </button>
+
+  </div>
+
+
+  <!-- MODAL DE CADASTRO / EDIÇÃO -->
+
+  <div class="formulario-overlay" *ngIf="mostrarModal">
+
+    <div class="formulario-produto">
+
+
+      <!-- CABEÇALHO DO MODAL -->
+
+      <div class="formulario-cabecalho">
+
+        <div>
+          <h2>{{ editando ? 'Editar Produto' : 'Novo Produto' }}</h2>
+          <p>{{ editando ? 'Altere as informações do produto.' : 'Cadastre um novo produto para sua loja.' }}</p>
+        </div>
+
+        <button class="btn-fechar" (click)="fecharModal()">×</button>
+
+      </div>
+
+
+      <!-- CORPO DO MODAL -->
+
+      <div class="formulario-corpo">
+
+
+        <!-- NOME -->
+
+        <div class="campo">
+          <label>Nome do produto</label>
+          <input
+            type="text"
+            [(ngModel)]="novoProduto.nome"
+            placeholder="Digite o nome do produto..."
+          >
+        </div>
+
+
+        <!-- DESCRIÇÃO -->
+
+        <div class="campo">
+          <label>Descrição</label>
+          <textarea
+            [(ngModel)]="novoProduto.descricao"
+            placeholder="Digite uma descrição para o produto..."
+          ></textarea>
+        </div>
+
+
+        <!-- LINHA: PREÇO + QUANTIDADE -->
+
+        <div class="campos-linha">
+
+          <div class="campo">
+            <label>Preço (R$)</label>
+            <input
+              type="number"
+              [(ngModel)]="novoProduto.preco"
+              placeholder="0,00"
+              min="0"
+              step="0.01"
+            >
+          </div>
+
+          <div class="campo">
+            <label>Quantidade</label>
+            <input
+              type="number"
+              [(ngModel)]="novoProduto.quantidade"
+              placeholder="0"
+              min="0"
+            >
+          </div>
+
+        </div>
+
+
+        <!-- CATEGORIA -->
+
+        <div class="campo">
+          <label>Categoria</label>
+          <select [(ngModel)]="novoProduto.categoria">
+            <option value="" disabled>Selecione uma categoria...</option>
+            <option *ngFor="let cat of categorias" [value]="cat">
+              {{ labelCategoria(cat) }}
+            </option>
+          </select>
+        </div>
+
+
+      </div>
+
+
+      <!-- AÇÕES -->
+
+      <div class="formulario-acoes">
+
+        <button class="btn-cancelar" (click)="fecharModal()">
+          Cancelar
+        </button>
+
+        <button class="btn-salvar" (click)="salvarProduto()">
+          {{ editando ? 'Salvar Alterações' : 'Salvar Produto' }}
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- CARD PRINCIPAL -->
+
+  <div class="card-produtos">
+
+    <!-- LINHA COLORIDA -->
+    <div class="linha-colorida"></div>
+
+
+    <!-- BARRA SUPERIOR -->
+
+    <div class="barra-superior">
+
+      <div class="quantidade">
+        <strong>{{ produtosFiltrados().length }}</strong>
+        <span>{{ produtosFiltrados().length === 1 ? 'produto encontrado' : 'produtos encontrados' }}</span>
+      </div>
+
+      <div class="barra-pesquisa">
+        <span>🔍</span>
+        <input
+          type="text"
+          placeholder="Pesquisar produto..."
+          [(ngModel)]="termoPesquisa"
+        >
+      </div>
+
+    </div>
+
+
+    <!-- TABELA -->
+
+    <div class="tabela-container">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th>Categoria</th>
+            <th>Quantidade</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let produto of produtosFiltrados()"
+            (click)="abrirEdicao(produto)"
+            class="linha-produto"
+            title="Clique para editar"
+          >
+
+            <td>
+              <span class="nome-produto">{{ produto.nome }}</span>
+            </td>
+
+            <td>
+              <span class="descricao-produto">{{ produto.descricao }}</span>
+            </td>
+
+            <td>
+              <span class="preco-produto">{{ formatarPreco(produto.preco) }}</span>
+            </td>
+
+            <td>
+              <span class="badge-categoria badge-{{ produto.categoria }}">
+                {{ labelCategoria(produto.categoria) }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="quantidade-produto"
+                [class.estoque-baixo]="produto.quantidade <= 5"
+              >
+                {{ produto.quantidade }}
+              </span>
+            </td>
+
+            <td>
+              <div class="acoes" (click)="$event.stopPropagation()">
+
+                <button
+                  class="btn-editar"
+                  (click)="abrirEdicao(produto)"
+                >
+                  <span>✏️</span>
+                  Editar
+                </button>
+
+                <button
+                  class="btn-excluir"
+                  (click)="excluirProduto(produto._id!)"
+                >
+                  <span>🗑️</span>
+                  Excluir
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+
+      <!-- NENHUM PRODUTO -->
+
+      <div class="sem-produtos" *ngIf="produtosFiltrados().length === 0">
+        {{ termoPesquisa ? 'Nenhum produto encontrado.' : 'Nenhum produto cadastrado.' }}
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
