@@ -1,63 +1,98 @@
 <div class="layout">
 
+  <!-- ========================
+       SIDEBAR
+  ========================= -->
+
   <aside class="sidebar">
 
-<div class="logo">
-  <h1>ARTGESTÃO</h1>
-</div>
+    <!-- LOGO -->
+    <div class="sidebar-logo">
+      <img src="logo.jpg" alt="Claudia Presentes e Artfestas" class="logo-img">
+      <div class="logo-texto">
+        <span class="logo-nome">ArtGestão</span>
+        <span class="logo-sub">Painel Administrativo</span>
+      </div>
+    </div>
 
-<nav class="menu">
+    <!-- DIVISOR -->
+    <div class="sidebar-divisor"></div>
 
-  <a routerLink="/" class="menu-item">
-    <span>🏠</span>
-    <span>Início</span>
-  </a>
+    <!-- MENU -->
+    <nav class="menu">
 
-  <a routerLink="/temas" class="menu-item">
-    <span>🎨</span>
-    <span>Temas</span>
-  </a>
+      <p class="menu-label">Principal</p>
 
-  <a routerLink="/produtos" class="menu-item">
-    <span>📦</span>
-    <span>Produtos</span>
-  </a>
+      <a routerLink="/temas" class="menu-item" routerLinkActive="menu-item-ativo">
+        <span class="menu-icone">🎨</span>
+        <span class="menu-texto">Temas</span>
+      </a>
 
-  <a routerLink="/agenda" class="menu-item">
-    <span>📅</span>
-    <span>Agenda</span>
-  </a>
+      <a routerLink="/produtos" class="menu-item" routerLinkActive="menu-item-ativo">
+        <span class="menu-icone">📦</span>
+        <span class="menu-texto">Produtos</span>
+      </a>
 
-  <a routerLink="/vendas" class="menu-item">
-    <span>💰</span>
-    <span>Vendas</span>
-  </a>
+      <a routerLink="/agenda" class="menu-item" routerLinkActive="menu-item-ativo">
+        <span class="menu-icone">📅</span>
+        <span class="menu-texto">Agenda</span>
+      </a>
 
-</nav>
+      <a routerLink="/vendas" class="menu-item" routerLinkActive="menu-item-ativo">
+        <span class="menu-icone">💰</span>
+        <span class="menu-texto">Vendas</span>
+      </a>
 
+    </nav>
+
+    <!-- RODAPÉ DA SIDEBAR -->
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-info">
+        <span class="sidebar-footer-icone">🎉</span>
+        <div>
+          <span class="sidebar-footer-nome">Claudia</span>
+          <span class="sidebar-footer-papel">Administradora</span>
+        </div>
+      </div>
+    </div>
 
   </aside>
 
+
+  <!-- ========================
+       CONTEÚDO PRINCIPAL
+  ========================= -->
+
   <div class="conteudo">
 
-<header class="topo">
+    <!-- TOPBAR -->
+    <header class="topbar">
 
-  <div></div>
+      <div class="topbar-titulo"></div>
 
-  <div class="usuario">
-    <span>👤</span>
-    <span>Administrador</span>
-  </div>
+      <div class="topbar-acoes">
 
-</header>
+        <div class="topbar-badge">
+          <span class="topbar-badge-icone">🎪</span>
+          <span class="topbar-badge-texto">Artfestas 232</span>
+        </div>
 
+        <div class="topbar-usuario">
+          <div class="avatar">C</div>
+          <div class="usuario-info">
+            <span class="usuario-nome">Claudia</span>
+            <span class="usuario-papel">Administradora</span>
+          </div>
+        </div>
 
-<main class="pagina">
+      </div>
 
-  <router-outlet></router-outlet>
+    </header>
 
-</main>
-
+    <!-- PÁGINA -->
+    <main class="pagina">
+      <router-outlet></router-outlet>
+    </main>
 
   </div>
 

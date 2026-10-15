@@ -1,320 +1,464 @@
+/* ==============================================
+   RESET E BASE
+=============================================== */
+
 * {
   box-sizing: border-box;
-  }
+  margin: 0;
+  padding: 0;
+}
 
 body {
-margin: 0;
-font-family: Arial, Helvetica, sans-serif;
-background: #f8f8f8;
-color: #292524;
+  font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+  background: #faf9f8;
+  color: #2d2a26;
 }
+
+/* ==============================================
+   LAYOUT GERAL
+=============================================== */
 
 .layout {
-display: flex;
-min-height: 100vh;
+  display: flex;
+  min-height: 100vh;
 }
 
-/* =========================
-SIDEBAR
-========================= */
+/* ==============================================
+   SIDEBAR
+=============================================== */
 
 .sidebar {
-width: 245px;
-min-height: 100vh;
+  width: 260px;
+  min-height: 100vh;
 
-background: #ffffff;
+  background: #ffffff;
 
-position: fixed;
-left: 0;
-top: 0;
+  position: fixed;
+  left: 0;
+  top: 0;
 
-border-right: 1px solid #eeeeee;
+  display: flex;
+  flex-direction: column;
 
-box-shadow: 3px 0 15px rgba(0, 0, 0, 0.04);
+  border-right: 1px solid #f0ece8;
 
-z-index: 10;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.06);
+
+  z-index: 20;
 }
 
-.logo {
-height: 75px;
+/* --- LOGO ÁREA --- */
 
-display: flex;
-align-items: center;
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-padding: 0 25px;
+  padding: 20px 22px;
 
-border-bottom: 1px solid #eeeeee;
+  background: linear-gradient(135deg, #fff8f5 0%, #fff3eb 100%);
+
+  border-bottom: 1px solid #f0ece8;
 }
 
-.logo h1 {
-margin: 0;
+.logo-img {
+  width: 54px;
+  height: 54px;
 
-font-size: 22px;
-font-weight: 800;
+  border-radius: 50%;
 
-letter-spacing: 0.8px;
+  object-fit: cover;
 
-color: #f97316;
+  border: 2px solid #f97316;
+
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.20);
+
+  flex-shrink: 0;
 }
 
-/* detalhe colorido da marca */
+.logo-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 
-.logo h1::after {
-content: " •";
-color: #38bdf8;
+  overflow: hidden;
 }
 
-/* =========================
-MENU
-========================= */
+.logo-nome {
+  font-size: 15px;
+  font-weight: 800;
+  color: #f97316;
+  letter-spacing: 0.3px;
+  line-height: 1;
+}
+
+.logo-sub {
+  font-size: 10px;
+  font-weight: 600;
+  color: #a8a29e;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* --- DIVISOR --- */
+
+.sidebar-divisor {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #f0ece8, transparent);
+  margin: 0 18px;
+}
+
+/* --- MENU --- */
 
 .menu {
-padding: 25px 14px;
+  flex: 1;
+  padding: 18px 14px;
+  overflow-y: auto;
 }
 
-.menu::before {
-content: "MENU";
-
-display: block;
-
-padding: 0 16px 12px;
-
-color: #a8a29e;
-
-font-size: 10px;
-font-weight: 700;
-
-letter-spacing: 1.2px;
+.menu-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #c4b5a5;
+  padding: 0 12px 10px;
 }
 
 .menu-item {
-display: flex;
-align-items: center;
+  display: flex;
+  align-items: center;
+  gap: 13px;
 
-gap: 14px;
+  padding: 12px 14px;
+  margin-bottom: 4px;
 
-padding: 13px 16px;
+  border-radius: 10px;
 
-margin-bottom: 7px;
+  text-decoration: none;
 
-border-radius: 9px;
+  color: #6b6560;
 
-text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
 
-color: #57534e;
+  transition: all 0.18s ease;
 
-font-size: 14px;
-font-weight: 500;
-
-transition: all 0.2s ease;
+  position: relative;
 }
 
-.menu-item span:first-child {
-width: 22px;
+.menu-icone {
+  width: 24px;
+  height: 24px;
 
-text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-font-size: 18px;
+  font-size: 17px;
+
+  flex-shrink: 0;
+}
+
+.menu-texto {
+  flex: 1;
 }
 
 .menu-item:hover {
-background: #fff7ed;
-
-color: #ea580c;
-
-transform: translateX(2px);
+  background: #fff3eb;
+  color: #ea580c;
+  transform: translateX(3px);
 }
 
-/* Tema ativo */
+/* Estado ativo — aplicado via routerLinkActive */
 
-.menu-item[href="/temas"] {
-background: #fff1e6;
-
-color: #ea580c;
-
-font-weight: 600;
-
-box-shadow: inset 3px 0 0 #f97316;
+.menu-item-ativo {
+  background: linear-gradient(135deg, #fff3eb 0%, #ffe8d6 100%);
+  color: #ea580c !important;
+  font-weight: 700;
+  box-shadow:
+    inset 3px 0 0 #f97316,
+    0 2px 8px rgba(249, 115, 22, 0.12);
 }
 
-/* =========================
-ÁREA PRINCIPAL
-========================= */
+/* --- RODAPÉ DA SIDEBAR --- */
+
+.sidebar-footer {
+  padding: 16px 18px;
+
+  border-top: 1px solid #f0ece8;
+
+  background: #faf9f8;
+}
+
+.sidebar-footer-info {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.sidebar-footer-icone {
+  width: 38px;
+  height: 38px;
+
+  background: linear-gradient(135deg, #fff3eb, #ffe8d6);
+
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+
+  flex-shrink: 0;
+}
+
+.sidebar-footer-nome {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #2d2a26;
+  line-height: 1.2;
+}
+
+.sidebar-footer-papel {
+  display: block;
+  font-size: 11px;
+  color: #a8a29e;
+  font-weight: 500;
+}
+
+/* ==============================================
+   ÁREA PRINCIPAL
+=============================================== */
 
 .conteudo {
-margin-left: 245px;
-
-width: calc(100% - 245px);
-
-min-height: 100vh;
+  margin-left: 260px;
+  width: calc(100% - 260px);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* =========================
-TOPO
-========================= */
+/* ==============================================
+   TOPBAR
+=============================================== */
 
-.topo {
-height: 75px;
+.topbar {
+  height: 68px;
 
-background: #ffffff;
+  background: #ffffff;
 
-border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid #f0ece8;
 
-display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-align-items: center;
+  padding: 0 32px;
 
-justify-content: flex-end;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
 
-padding: 0 35px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.usuario {
-display: flex;
-
-align-items: center;
-
-gap: 10px;
-
-color: #57534e;
-
-font-size: 14px;
-
-font-weight: 500;
+.topbar-titulo {
+  flex: 1;
 }
 
-.usuario span:first-child {
-width: 38px;
-height: 38px;
-
-display: flex;
-
-align-items: center;
-justify-content: center;
-
-background: #fff1e6;
-
-border-radius: 50%;
-
-font-size: 18px;
+.topbar-acoes {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-/* =========================
-CONTEÚDO
-========================= */
+/* Badge da loja */
+
+.topbar-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 14px;
+
+  background: linear-gradient(135deg, #fff3eb, #ffe8d6);
+
+  border-radius: 20px;
+
+  border: 1px solid #fddcbb;
+}
+
+.topbar-badge-icone {
+  font-size: 15px;
+}
+
+.topbar-badge-texto {
+  font-size: 12px;
+  font-weight: 700;
+  color: #c2410c;
+  letter-spacing: 0.2px;
+}
+
+/* Usuário */
+
+.topbar-usuario {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 7px 14px 7px 8px;
+
+  background: #faf9f8;
+
+  border-radius: 20px;
+
+  border: 1px solid #f0ece8;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+
+  background: linear-gradient(135deg, #f97316, #fb923c);
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 15px;
+  font-weight: 800;
+  color: white;
+
+  flex-shrink: 0;
+}
+
+.usuario-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.usuario-nome {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2d2a26;
+  line-height: 1;
+}
+
+.usuario-papel {
+  font-size: 11px;
+  color: #a8a29e;
+  font-weight: 500;
+}
+
+/* ==============================================
+   PÁGINA (CONTEÚDO)
+=============================================== */
 
 .pagina {
-padding: 35px;
-
-min-height: calc(100vh - 75px);
-
-position: relative;
+  flex: 1;
+  padding: 34px 36px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* =========================
-DETALHES DE FESTA
-========================= */
+/* Balão decorativo no fundo — referência à identidade da loja */
 
 .pagina::before {
-content: "";
-
-position: absolute;
-
-width: 90px;
-height: 90px;
-
-border-radius: 50%;
-
-background: #f97316;
-
-opacity: 0.06;
-
-top: 20px;
-right: 50px;
-
-pointer-events: none;
+  content: "🎈";
+  position: absolute;
+  font-size: 120px;
+  opacity: 0.04;
+  top: -10px;
+  right: 30px;
+  pointer-events: none;
+  user-select: none;
 }
 
 .pagina::after {
-content: "";
-
-position: absolute;
-
-width: 55px;
-height: 55px;
-
-border-radius: 50%;
-
-background: #38bdf8;
-
-opacity: 0.06;
-
-top: 75px;
-right: 115px;
-
-pointer-events: none;
+  content: "🎁";
+  position: absolute;
+  font-size: 90px;
+  opacity: 0.04;
+  top: 90px;
+  right: 155px;
+  pointer-events: none;
+  user-select: none;
 }
 
-/* =========================
-RESPONSIVO
-========================= */
+/* ==============================================
+   RESPONSIVO
+=============================================== */
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
 
-.sidebar {
-width: 75px;
-}
+  .sidebar {
+    width: 72px;
+  }
 
-.logo {
-padding: 0;
+  .sidebar-logo {
+    padding: 16px;
+    justify-content: center;
+  }
 
+  .logo-img {
+    width: 40px;
+    height: 40px;
+  }
 
-justify-content: center;
+  .logo-texto,
+  .sidebar-footer-nome,
+  .sidebar-footer-papel {
+    display: none;
+  }
 
-}
+  .menu-label {
+    display: none;
+  }
 
-.logo h1 {
-font-size: 0;
-}
+  .menu-item {
+    justify-content: center;
+    padding: 12px;
+  }
 
-.logo h1::before {
-content: "A";
+  .menu-texto {
+    display: none;
+  }
 
-font-size: 24px;
+  .sidebar-footer {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+  }
 
-color: #f97316;
+  .topbar-badge {
+    display: none;
+  }
 
-}
+  .conteudo {
+    margin-left: 72px;
+    width: calc(100% - 72px);
+  }
 
-.logo h1::after {
-content: "";
-}
-
-.menu-item {
-justify-content: center;
-
-
-padding: 13px;
-
-
-}
-
-.menu-item span:last-child {
-display: none;
-}
-
-.menu::before {
-display: none;
-}
-
-.conteudo {
-margin-left: 75px;
-
-width: calc(100% - 75px);
+  .pagina {
+    padding: 20px 16px;
+  }
 
 }
 
-.pagina {
-padding: 20px;
-}
+@media (max-width: 600px) {
+
+  .topbar {
+    padding: 0 16px;
+  }
+
+  .usuario-info {
+    display: none;
+  }
+
 }
