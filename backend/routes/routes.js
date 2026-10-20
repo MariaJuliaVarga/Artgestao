@@ -2,6 +2,8 @@ import express from 'express';
 
 import TemaController from '../controllers/TemaController.js';
 import ProdutoController from '../controllers/ProdutoController.js';
+import AgendaController from '../controllers/AgendaController.js';
+import DataBloqueadaController from '../controllers/DataBloqueadaController.js';
 
 import upload from '../middlewares/upload.js';
 
@@ -50,5 +52,40 @@ router.patch('/produtos/:id/quantidade', ProdutoController.atualizarQuantidade);
 
 // Excluir produto
 router.delete('/produtos/:id', ProdutoController.excluir);
+
+// ========================
+// ROTAS DE AGENDA
+// ========================
+
+// Cadastrar festa
+router.post('/agenda', AgendaController.cadastrar);
+
+// Listar todas as festas
+router.get('/agenda', AgendaController.listar);
+
+// Listar festas por data (YYYY-MM-DD)
+router.get('/agenda/data/:data', AgendaController.listarPorData);
+
+// Buscar festa por ID
+router.get('/agenda/:id', AgendaController.buscarPorId);
+
+// Editar festa
+router.put('/agenda/:id', AgendaController.editar);
+
+// Excluir festa
+router.delete('/agenda/:id', AgendaController.excluir);
+
+// ========================
+// ROTAS DE DATAS BLOQUEADAS
+// ========================
+
+// Listar todas as datas bloqueadas
+router.get('/datas-bloqueadas', DataBloqueadaController.listar);
+
+// Bloquear uma data
+router.post('/datas-bloqueadas', DataBloqueadaController.bloquear);
+
+// Desbloquear uma data (por valor da data YYYY-MM-DD)
+router.delete('/datas-bloqueadas/:data', DataBloqueadaController.desbloquear);
 
 export default router;

@@ -1,0 +1,472 @@
+<div class="pagina-agenda">
+
+  <!-- ========================
+       CABEÇALHO
+  ========================= -->
+
+  <div class="cabecalho">
+
+    <div>
+
+      <h1>Gerenciar Agenda</h1>
+
+      <p>
+        {{ quantidadeMes }}
+        {{ quantidadeMes === 1 ? 'festa agendada' : 'festas agendadas' }}
+        em {{ tituloMes }}
+      </p>
+
+    </div>
+
+    <button
+      class="btn-novo"
+      (click)="abrirNovaFesta()"
+    >
+      <span>+</span>
+      Nova Festa
+    </button>
+
+  </div>
+
+
+  <!-- ========================
+       GRID PRINCIPAL
+  ========================= -->
+
+  <div class="agenda-grid">
+
+    <!-- CALENDÁRIO -->
+
+    <div class="calendario-card">
+
+      <div class="calendario-nav">
+
+        <button class="btn-nav" (click)="mesAnterior()">‹</button>
+
+        <h2 class="calendario-titulo">{{ tituloMes }}</h2>
+
+        <button class="btn-nav" (click)="proximoMes()">›</button>
+
+      </div>
+
+      <div class="semana-labels">
+        <span *ngFor="let dia of diasSemana" class="semana-label">
+          {{ dia }}
+        </span>
+      </div>
+
+      <div class="calendario-grid">
+
+        <button
+          *ngFor="let dia of diasMes"
+          class="dia-btn"
+          [class.dia-fora-mes]="dia.foraMes"
+          [class.dia-hoje]="ehHoje(dia)"
+          [class.dia-selecionado]="ehSelecionado(dia)"
+          [class.dia-com-festa]="dia.temFesta && !dia.foraMes"
+          [class.dia-bloqueado]="dia.bloqueada && !dia.foraMes"
+          [disabled]="dia.foraMes"
+          (click)="selecionarDia(dia)"
+        >
+
+          <span class="dia-numero">{{ dia.numero }}</span>
+
+          <span
+            class="dia-ponto"
+            *ngIf="dia.temFesta && !dia.foraMes && !dia.bloqueada"
+          ></span>
+
+          <span
+            class="dia-traco"
+            *ngIf="dia.bloqueada && !dia.foraMes"
+          ></span>
+
+        </button>
+
+      </div>
+
+      <!-- LEGENDA -->
+
+      <div class="legenda">
+
+        <div class="legenda-item">
+          <span class="legenda-ponto legenda-festa"></span>
+          <span>Festa agendada</span>
+        </div>
+
+        <div class="legenda-item">
+          <span class="legenda-ponto legenda-bloqueio"></span>
+          <span>Dia bloqueado</span>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- PAINEL FESTAS DO DIA -->
+
+    <div class="painel-festas">
+
+      <!-- Nenhum dia selecionado -->
+
+      <div class="painel-vazio" *ngIf="!diaSelecionado">
+        <span class="painel-vazio-icone">📅</span>
+        <p>Selecione um dia no calendário para ver as festas agendadas.</p>
+      </div>
+
+      <!-- Dia selecionado -->
+
+      <ng-container *ngIf="diaSelecionado">
+
+        <!-- CABEÇALHO DO PAINEL -->
+
+        <div class="festas-cabecalho">
+
+          <div>
+
+            <h2>
+              {{ formatarDataExibicao(diaSelecionado) }}
+            </h2>
+
+            <p *ngIf="festasDoDia.length > 0 && !diaSelecionadoBloqueado">
+              {{ festasDoDia.length }}
+              {{ festasDoDia.length === 1 ? 'festa' : 'festas' }}
+              agendada{{ festasDoDia.length === 1 ? '' : 's' }}
+            </p>
+
+            <p *ngIf="diaSelecionadoBloqueado" class="badge-bloqueado">
+              🚫 Dia bloqueado
+            </p>
+
+          </div>
+
+          <div class="painel-acoes">
+
+            <!-- Botão bloquear/desbloquear -->
+
+            <button
+              *ngIf="!diaSelecionadoBloqueado"
+              class="btn-bloquear"
+              (click)="abrirModalBloqueio()"
+              title="Bloquear este dia"
+            >
+              🚫 Bloquear
+            </button>
+
+            <button
+              *ngIf="diaSelecionadoBloqueado"
+              class="btn-desbloquear"
+              (click)="desbloquearData()"
+              title="Desbloquear este dia"
+            >
+              ✅ Desbloquear
+            </button>
+
+            <button
+              *ngIf="!diaSelecionadoBloqueado"
+              class="btn-novo btn-novo-pequeno"
+              (click)="abrirNovaFesta()"
+            >
+              <span>+</span>
+              Nova
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- DIA BLOQUEADO -->
+
+        <div class="dia-bloqueado-aviso" *ngIf="diaSelecionadoBloqueado">
+          <span class="bloqueado-icone">🚫</span>
+          <div>
+            <strong>Este dia está bloqueado.</strong>
+            <p>Você marcou esta data como indisponível.</p>
+          </div>
+        </div>
+
+        <!-- LISTA DE FESTAS (mesmo se bloqueado, exibe as que existirem) -->
+
+        <div
+          class="lista-festas"
+          *ngIf="festasDoDia.length > 0"
+        >
+
+          <div
+            class="festa-card"
+            *ngFor="let festa of festasDoDia"
+            [class.festa-card-bloqueada]="diaSelecionadoBloqueado"
+          >
+
+            <div class="festa-horario-badge">
+              {{ festa.horario }}
+            </div>
+
+            <div class="festa-info">
+
+              <h3>{{ festa.nome }}</h3>
+
+              <p *ngIf="festa.observacao" class="festa-obs">
+                {{ festa.observacao }}
+              </p>
+
+            </div>
+
+            <div class="festa-acoes">
+
+              <button class="btn-detalhes" (click)="abrirDetalhes(festa)">
+                Detalhes
+              </button>
+
+              <button class="btn-editar" (click)="abrirEdicao(festa)">
+                Editar
+              </button>
+
+              <button class="btn-excluir" (click)="excluirFesta(festa._id!)">
+                Excluir
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- SEM FESTAS (só exibe se não bloqueado) -->
+
+        <div
+          class="sem-festas"
+          *ngIf="festasDoDia.length === 0 && !diaSelecionadoBloqueado"
+        >
+          <span class="sem-festas-icone">📭</span>
+          <p>Nenhuma festa agendada para este dia.</p>
+          <button class="btn-novo" (click)="abrirNovaFesta()">
+            <span>+</span>
+            Cadastrar festa
+          </button>
+        </div>
+
+      </ng-container>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================
+       MODAL — BLOQUEAR DATA
+  ========================= -->
+
+  <div
+    class="formulario-overlay"
+    *ngIf="mostrarModalBloqueio"
+    (click)="fecharModalBloqueio()"
+  >
+
+    <div
+      class="formulario-festa"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div class="formulario-cabecalho">
+
+        <div>
+          <h2>Bloquear Data</h2>
+          <p>
+            Marcar {{ formatarDataExibicao(diaSelecionado!) }}
+            como indisponível.
+          </p>
+        </div>
+
+        <button class="btn-fechar" (click)="fecharModalBloqueio()">×</button>
+
+      </div>
+
+      <div class="formulario-corpo">
+
+        <div class="campo">
+
+          <label>Motivo <span class="opcional">(opcional)</span></label>
+
+          <input
+            type="text"
+            [(ngModel)]="motivoBloqueio"
+            placeholder="Ex: Feriado, viagem, folga..."
+          >
+
+        </div>
+
+        <div class="bloqueio-aviso">
+          🚫 Este dia ficará marcado como indisponível no calendário.
+        </div>
+
+      </div>
+
+      <div class="formulario-acoes">
+
+        <button class="btn-cancelar" (click)="fecharModalBloqueio()">
+          Cancelar
+        </button>
+
+        <button class="btn-bloquear-confirmar" (click)="confirmarBloqueio()">
+          Confirmar Bloqueio
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================
+       MODAL — FORMULÁRIO FESTA
+  ========================= -->
+
+  <div class="formulario-overlay" *ngIf="mostrarFormulario">
+
+    <div class="formulario-festa">
+
+      <div class="formulario-cabecalho">
+
+        <div>
+          <h2>{{ editando ? 'Editar Festa' : 'Nova Festa' }}</h2>
+          <p>
+            {{ editando
+              ? 'Altere as informações da festa.'
+              : 'Cadastre uma nova festa na agenda.'
+            }}
+          </p>
+        </div>
+
+        <button class="btn-fechar" (click)="fecharFormulario()">×</button>
+
+      </div>
+
+      <div class="formulario-corpo">
+
+        <div class="campo">
+          <label>
+            Nome / Identificação
+            <span class="obrigatorio">*</span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="novaFesta.nome"
+            placeholder="Ex: Festa de aniversário da Maria..."
+          >
+        </div>
+
+        <div class="campos-linha">
+
+          <div class="campo">
+            <label>Data <span class="obrigatorio">*</span></label>
+            <input type="date" [(ngModel)]="novaFesta.data">
+          </div>
+
+          <div class="campo">
+            <label>Horário <span class="obrigatorio">*</span></label>
+            <input type="time" [(ngModel)]="novaFesta.horario">
+          </div>
+
+        </div>
+
+        <div class="campo">
+          <label>Observação</label>
+          <textarea
+            [(ngModel)]="novaFesta.observacao"
+            placeholder="Alguma observação relevante sobre a festa..."
+          ></textarea>
+        </div>
+
+      </div>
+
+      <div class="formulario-acoes">
+
+        <button class="btn-cancelar" (click)="fecharFormulario()">
+          Cancelar
+        </button>
+
+        <button class="btn-salvar" (click)="salvarFesta()">
+          {{ editando ? 'Salvar Alterações' : 'Salvar Festa' }}
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================
+       MODAL — DETALHES
+  ========================= -->
+
+  <div
+    class="formulario-overlay"
+    *ngIf="festaDetalhes"
+    (click)="fecharDetalhes()"
+  >
+
+    <div
+      class="formulario-festa"
+      (click)="$event.stopPropagation()"
+    >
+
+      <div class="formulario-cabecalho">
+        <div>
+          <h2>Detalhes da Festa</h2>
+          <p>Informações da festa selecionada.</p>
+        </div>
+        <button class="btn-fechar" (click)="fecharDetalhes()">×</button>
+      </div>
+
+      <div class="detalhes-corpo">
+
+        <div class="detalhe-item">
+          <span class="detalhe-label">Nome</span>
+          <span class="detalhe-valor">{{ festaDetalhes!.nome }}</span>
+        </div>
+
+        <div class="detalhe-item">
+          <span class="detalhe-label">Data</span>
+          <span class="detalhe-valor">
+            {{ formatarDataExibicao(festaDetalhes!.data) }}
+          </span>
+        </div>
+
+        <div class="detalhe-item">
+          <span class="detalhe-label">Horário</span>
+          <span class="detalhe-valor">{{ festaDetalhes!.horario }}</span>
+        </div>
+
+        <div class="detalhe-item" *ngIf="festaDetalhes!.observacao">
+          <span class="detalhe-label">Observação</span>
+          <span class="detalhe-valor">{{ festaDetalhes!.observacao }}</span>
+        </div>
+
+        <div class="detalhe-item" *ngIf="festaDetalhes!.usuario">
+          <span class="detalhe-label">Registrado por</span>
+          <span class="detalhe-valor">{{ festaDetalhes!.usuario }}</span>
+        </div>
+
+      </div>
+
+      <div class="formulario-acoes">
+
+        <button class="btn-cancelar" (click)="fecharDetalhes()">
+          Fechar
+        </button>
+
+        <button class="btn-editar-modal" (click)="abrirEdicao(festaDetalhes!)">
+          Editar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
