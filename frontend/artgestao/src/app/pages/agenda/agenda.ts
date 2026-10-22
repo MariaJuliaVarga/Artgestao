@@ -284,6 +284,23 @@ export class Agenda implements OnInit {
 
   abrirModalBloqueio(): void {
 
+    if (!this.diaSelecionado) {
+      return;
+    }
+
+    // Impede bloqueio se há festa cadastrada no dia
+    const temFesta = this.todasFestas.some(
+      f => f.data === this.diaSelecionado
+    );
+
+    if (temFesta) {
+
+      alert('Não é possível bloquear esta data pois há festa(s) cadastrada(s) nela.');
+
+      return;
+
+    }
+
     this.motivoBloqueio = '';
 
     this.mostrarModalBloqueio = true;
@@ -327,7 +344,11 @@ export class Agenda implements OnInit {
 
         console.error('Erro ao bloquear data:', erro);
 
-        alert('Erro ao bloquear a data.');
+        if (erro.status === 409) {
+          alert('Não é possível bloquear esta data pois há festa(s) cadastrada(s) nela.');
+        } else {
+          alert('Erro ao bloquear a data.');
+        }
 
       }
 

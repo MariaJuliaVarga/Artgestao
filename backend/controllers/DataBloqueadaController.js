@@ -1,4 +1,5 @@
 import DataBloqueada from '../models/DataBloqueada.js';
+import Agenda from '../models/Agenda.js';
 
 class DataBloqueadaController {
 
@@ -55,6 +56,17 @@ class DataBloqueadaController {
 
             }
 
+            // Verifica se há festa cadastrada nesta data
+            const festas = await Agenda.findByData(data);
+
+            if (festas && festas.length > 0) {
+
+                return res
+                    .status(409)
+                    .send('Não é possível bloquear esta data pois há festa(s) cadastrada(s) nela.');
+
+            }
+
             // Não estava bloqueada → bloquear
             const nova = new DataBloqueada(data, motivo || '');
 
@@ -102,6 +114,17 @@ class DataBloqueadaController {
             if (existente) {
 
                 return res.json(existente);
+
+            }
+
+            // Verifica se há festa cadastrada nesta data
+            const festas = await Agenda.findByData(data);
+
+            if (festas && festas.length > 0) {
+
+                return res
+                    .status(409)
+                    .send('Não é possível bloquear esta data pois há festa(s) cadastrada(s) nela.');
 
             }
 
