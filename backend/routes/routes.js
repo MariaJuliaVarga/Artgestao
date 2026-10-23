@@ -4,6 +4,7 @@ import TemaController from '../controllers/TemaController.js';
 import ProdutoController from '../controllers/ProdutoController.js';
 import AgendaController from '../controllers/AgendaController.js';
 import DataBloqueadaController from '../controllers/DataBloqueadaController.js';
+import VendaController from '../controllers/VendaController.js';
 
 import upload from '../middlewares/upload.js';
 
@@ -87,5 +88,21 @@ router.post('/datas-bloqueadas', DataBloqueadaController.bloquear);
 
 // Desbloquear uma data (por valor da data YYYY-MM-DD)
 router.delete('/datas-bloqueadas/:data', DataBloqueadaController.desbloquear);
+
+// ========================
+// ROTAS DE VENDAS
+// ========================
+
+// Registrar venda
+router.post('/vendas', VendaController.cadastrar);
+
+// Listar todas as vendas
+router.get('/vendas', VendaController.listar);
+
+// Buscar venda por ID
+router.get('/vendas/:id', VendaController.buscarPorId);
+
+// Excluir venda
+router.delete('/vendas/:id', VendaController.excluir);
 
 export default router;

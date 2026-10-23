@@ -1,0 +1,451 @@
+<div class="pagina-vendas">
+
+  <!-- CABEÇALHO -->
+
+  <div class="cabecalho">
+
+    <div>
+      <h1>Registrar Vendas</h1>
+      <p>{{ vendas.length }} {{ vendas.length === 1 ? 'venda registrada' : 'vendas registradas' }}</p>
+    </div>
+
+    <button class="btn-novo" (click)="abrirFormulario()">
+      <span>+</span>
+      Registrar Venda
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       MODAL: REGISTRAR NOVA VENDA
+  ====================================================== -->
+
+  <div class="overlay" *ngIf="mostrarFormulario">
+
+    <div class="modal-venda">
+
+
+      <!-- CABEÇALHO -->
+
+      <div class="modal-cabecalho">
+
+        <div>
+          <h2>Nova Venda</h2>
+          <p>Selecione os produtos e informe as quantidades.</p>
+        </div>
+
+        <button class="btn-fechar" (click)="fecharFormulario()">×</button>
+
+      </div>
+
+
+      <!-- CORPO -->
+
+      <div class="modal-corpo">
+
+
+        <!-- BLOCO: ADICIONAR PRODUTO -->
+
+        <div class="bloco-adicionar">
+
+          <h3 class="bloco-titulo">Adicionar produto</h3>
+
+          <div class="linha-adicionar">
+
+            <!-- Pesquisa de produto -->
+            <div class="campo campo-busca">
+              <label>Produto</label>
+              <div class="busca-wrapper">
+                <span class="busca-icone">🔍</span>
+                <input
+                  type="text"
+                  [(ngModel)]="termoPesquisaProduto"
+                  placeholder="Pesquisar produto..."
+                >
+              </div>
+
+              <!-- Lista de produtos filtrados -->
+              <div
+                class="lista-produtos-dropdown"
+                *ngIf="termoPesquisaProduto && produtosFiltradosModal.length > 0"
+              >
+                <div
+                  *ngFor="let p of produtosFiltradosModal"
+                  class="item-dropdown"
+                  [class.selecionado]="produtoSelecionadoId === p._id"
+                  (click)="produtoSelecionadoId = p._id!; termoPesquisaProduto = p.nome"
+                >
+                  <span class="item-dropdown-nome">{{ p.nome }}</span>
+                  <span class="item-dropdown-info">
+                    {{ formatarPreco(p.preco) }} · estoque: {{ p.quantidade }}
+                  </span>
+                </div>
+              </div>
+
+              <div
+                class="lista-produtos-dropdown"
+                *ngIf="termoPesquisaProduto && produtosFiltradosModal.length === 0"
+              >
+                <div class="item-dropdown sem-resultado">Nenhum produto encontrado.</div>
+              </div>
+
+            </div>
+
+            <!-- Preço unitário (somente leitura) -->
+            <div class="campo campo-preco">
+              <label>Valor unitário</label>
+              <input
+                type="text"
+                [value]="produtoSelecionado ? formatarPreco(produtoSelecionado.preco) : '—'"
+                readonly
+                class="input-readonly"
+              >
+            </div>
+
+            <!-- Quantidade -->
+            <div class="campo campo-qtd">
+              <label>Quantidade</label>
+              <input
+                type="number"
+                [(ngModel)]="quantidadeItem"
+                min="1"
+                placeholder="1"
+              >
+            </div>
+
+            <!-- Botão adicionar -->
+            <div class="campo campo-acao">
+              <label>&nbsp;</label>
+              <button class="btn-adicionar" (click)="adicionarAoCarrinho()">
+                Adicionar
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- BLOCO: ITENS DA VENDA -->
+
+        <div class="bloco-itens">
+
+          <h3 class="bloco-titulo">Itens da venda</h3>
+
+          <!-- Vazio -->
+          <div class="sem-itens" *ngIf="carrinho.length === 0">
+            Nenhum produto adicionado ainda.
+          </div>
+
+          <!-- Tabela de itens -->
+          <div class="tabela-container" *ngIf="carrinho.length > 0">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Valor Unit.</th>
+                  <th>Quantidade</th>
+                  <th>Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr *ngFor="let item of carrinho; let i = index">
+
+                  <td>
+                    <span class="nome-produto">{{ item.produto.nome }}</span>
+                  </td>
+
+                  <td>
+                    <span class="preco-produto">{{ formatarPreco(item.produto.preco) }}</span>
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      class="input-qtd-carrinho"
+                      [value]="item.quantidade"
+                      min="1"
+                      [max]="item.produto.quantidade"
+                      (change)="atualizarQuantidadeCarrinho(item, +$any($event.target).value)"
+                    >
+                  </td>
+
+                  <td>
+                    <span class="total-item">
+                      {{ formatarPreco(item.produto.preco * item.quantidade) }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <button
+                      class="btn-remover"
+                      (click)="removerDoCarrinho(i)"
+                      title="Remover produto"
+                    >
+                      🗑️
+                    </button>
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+          <!-- Total da venda -->
+          <div class="total-venda" *ngIf="carrinho.length > 0">
+            <span class="total-label">Total da venda:</span>
+            <span class="total-valor">{{ formatarPreco(totalCarrinho) }}</span>
+          </div>
+
+        </div>
+
+
+        <!-- OBSERVAÇÃO -->
+
+        <div class="campo">
+          <label>Observação (opcional)</label>
+          <textarea
+            [(ngModel)]="observacao"
+            placeholder="Informações adicionais sobre a venda..."
+            rows="2"
+          ></textarea>
+        </div>
+
+
+      </div>
+
+
+      <!-- RODAPÉ DO MODAL -->
+
+      <div class="modal-rodape">
+
+        <button class="btn-cancelar" (click)="fecharFormulario()">
+          Cancelar
+        </button>
+
+        <button
+          class="btn-finalizar"
+          (click)="finalizarVenda()"
+          [disabled]="carrinho.length === 0"
+        >
+          Finalizar Venda
+        </button>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       MODAL: DETALHES DA VENDA
+  ====================================================== -->
+
+  <div class="overlay" *ngIf="vendaDetalhes">
+
+    <div class="modal-detalhes">
+
+      <div class="modal-cabecalho">
+
+        <div>
+          <h2>Detalhes da Venda</h2>
+          <p>{{ formatarData(vendaDetalhes!.data) }}</p>
+        </div>
+
+        <button class="btn-fechar" (click)="fecharDetalhes()">×</button>
+
+      </div>
+
+      <div class="modal-corpo">
+
+        <div class="tabela-container">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Valor Unit.</th>
+                <th>Qtd.</th>
+                <th>Total Item</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let item of vendaDetalhes!.itens">
+                <td>{{ item.nomeProduto }}</td>
+                <td>{{ formatarPreco(item.precoUnitario) }}</td>
+                <td>{{ item.quantidade }}</td>
+                <td>{{ formatarPreco(item.totalItem) }}</td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <div class="total-venda">
+          <span class="total-label">Total da venda:</span>
+          <span class="total-valor">{{ formatarPreco(vendaDetalhes!.totalVenda) }}</span>
+        </div>
+
+        <div class="detalhe-obs" *ngIf="vendaDetalhes!.observacao">
+          <strong>Observação:</strong> {{ vendaDetalhes!.observacao }}
+        </div>
+
+      </div>
+
+      <div class="modal-rodape">
+        <button class="btn-cancelar" (click)="fecharDetalhes()">Fechar</button>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       CARD PRINCIPAL — LISTA DE VENDAS
+  ====================================================== -->
+
+  <div class="card-vendas">
+
+    <div class="linha-colorida"></div>
+
+    <!-- BARRA SUPERIOR -->
+
+    <div class="barra-superior">
+
+      <div class="resumo">
+
+        <div class="resumo-item">
+          <span class="resumo-valor">{{ vendas.length }}</span>
+          <span class="resumo-label">{{ vendas.length === 1 ? 'venda' : 'vendas' }} no total</span>
+        </div>
+
+        <div class="resumo-divisor"></div>
+
+        <div class="resumo-item">
+          <span class="resumo-valor verde">{{ formatarPreco(totalMes) }}</span>
+          <span class="resumo-label">faturamento do mês</span>
+        </div>
+
+      </div>
+
+      <div class="barra-pesquisa">
+        <span>🔍</span>
+        <input
+          type="text"
+          placeholder="Pesquisar por produto, data ou observação..."
+          [(ngModel)]="termoPesquisa"
+        >
+      </div>
+
+    </div>
+
+
+    <!-- TABELA DE VENDAS -->
+
+    <div class="tabela-container">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Produtos</th>
+            <th>Itens</th>
+            <th>Total</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let venda of vendasFiltradas"
+            class="linha-venda"
+            (click)="abrirDetalhes(venda)"
+            title="Clique para ver detalhes"
+          >
+
+            <td>
+              <span class="data-venda">{{ formatarData(venda.data) }}</span>
+            </td>
+
+            <td>
+              <div class="produtos-resumo">
+                <span
+                  *ngFor="let item of venda.itens.slice(0, 2)"
+                  class="badge-produto"
+                >
+                  {{ item.nomeProduto }}
+                </span>
+                <span
+                  *ngIf="venda.itens.length > 2"
+                  class="badge-mais"
+                >
+                  +{{ venda.itens.length - 2 }} mais
+                </span>
+              </div>
+            </td>
+
+            <td>
+              <span class="qtd-itens">{{ venda.itens.length }}</span>
+            </td>
+
+            <td>
+              <span class="total-venda-linha">{{ formatarPreco(venda.totalVenda) }}</span>
+            </td>
+
+            <td>
+              <div class="acoes" (click)="$event.stopPropagation()">
+
+                <button
+                  class="btn-detalhes"
+                  (click)="abrirDetalhes(venda)"
+                >
+                  <span>👁️</span>
+                  Detalhes
+                </button>
+
+                <button
+                  class="btn-excluir"
+                  (click)="excluirVenda(venda._id!)"
+                >
+                  <span>🗑️</span>
+                  Excluir
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+
+      <!-- VAZIO -->
+
+      <div class="sem-vendas" *ngIf="vendasFiltradas.length === 0">
+        {{ termoPesquisa ? 'Nenhuma venda encontrada.' : 'Nenhuma venda registrada.' }}
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
